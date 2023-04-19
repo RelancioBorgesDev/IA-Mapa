@@ -1,0 +1,49 @@
+.map_inputs{
+    width: 20rem;
+    position: absolute;
+    bottom: 10px;
+    left: 30px;
+    z-index: 500;
+
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.map_inputs input{
+    padding: .5rem;
+    border-radius: .5rem;
+    border: 0;
+    outline: none;
+    font-size: 1rem;
+}
+
+.map_inputs input:focus{
+   border: 4px solid #1a73e8;
+}
+
+.map_inputs button{
+    width: 100%;
+    padding: .5rem;
+    border-radius: .5rem;
+    border: 0;
+    outline: none;
+    font-size: 1rem;
+    background-color: #1a73e8;
+    color: #fff;
+    font-size: 1rem;
+
+}
+
+.map_inputs button:hover{
+    background-color: #5196f0;
+    cursor: pointer;
+ 
+}
+
+
+.inputError {
+    border: 1px solid red;
+  }
+  
+
