@@ -8,10 +8,10 @@ import {
   ICoordenadas,
 } from "../../utils/coordenadas";
 import { FormDataContext } from "../../contexts/FormDataContext";
-import FormularioPesqusia from "./FormPesquisa";
+import FormularioPesqusia from "./components/FormPesquisa";
 import { PesquisaDadosContext } from "../../contexts/PesquisaDadosContext";
 import { api } from "../../api/api";
-import LeafletMapa from "./LeafletMapa";
+import LeafletMapa from "./components/LeafletMapa";
 import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 
@@ -23,9 +23,11 @@ export interface ILocations {
 export default function Mapa() {
   const { dadosForm } = useContext(FormDataContext);
   const { pesquisaDados, setPesquisaDados } = useContext(PesquisaDadosContext);
+
   const [locais, setLocais] = useState<ILocations[]>([]);
   const [paises, setPaises] = useState<Array<string>>([]);
   const [primeiraRequisicao, setPrimeiraRequisicao] = useState(false);
+  const [formEnviado, setFormEnviado] = useState(false);
 
   async function recebePaises() {
     limparVetor();
@@ -47,7 +49,6 @@ export default function Mapa() {
       );
     }
     setPaises(resposta.data);
-    console.log(paises);
     setPrimeiraRequisicao(true);
   }
 
@@ -84,10 +85,10 @@ export default function Mapa() {
   }
 
   useEffect(() => {
-    if (pesquisaDados.destino && pesquisaDados.partida) {
+    if (formEnviado && pesquisaDados.destino && pesquisaDados.partida) {
       recebePaises();
     }
-  }, [pesquisaDados]);
+  }, [formEnviado, pesquisaDados]);
 
   useEffect(() => {
     verificaPaisesERetornaCoordenadas(paises);
@@ -103,7 +104,10 @@ export default function Mapa() {
 
   return (
     <div className={style.map_container}>
-      <FormularioPesqusia setPesquisaDados={setPesquisaDados} />
+      <FormularioPesqusia
+        setPesquisaDados={setPesquisaDados}
+        setFormEnviado={setFormEnviado}
+      />
       <LeafletMapa locais={locais} paises={paises} />
       <ToastContainer
         position='top-right'
@@ -118,7 +122,6 @@ export default function Mapa() {
         theme='colored'
         style={{
           zIndex: 2000000000,
-          color: "red",
         }}
       />
       <Link to='/'>

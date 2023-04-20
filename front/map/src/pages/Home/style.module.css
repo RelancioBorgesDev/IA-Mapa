@@ -3,6 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
 }
 
 .formulario{
@@ -13,7 +14,10 @@
     justify-content: center;
     gap: 2rem;
     padding-top: 2rem;
-    padding: 1rem;
+    padding: 2rem;
+    background-color: #222;
+    border-radius: .5rem;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
 .main_inputs_countries{
@@ -25,11 +29,27 @@
     border: 0;
 }
 
+
+@media (max-width: 975px) {
+    .main_inputs_countries{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }   
+}
+
+@media (max-width: 675px) {
+    .main_inputs_countries{
+        display: grid;
+        grid-template-columns: 1fr;
+    }   
+}
+
 .input_container{
     position: relative;
     height: 7rem;
     width: 100%;
     margin: 0.5rem;
+    overflow: hidden;
 }
 
 .input_container input{
@@ -40,7 +60,6 @@
     cursor: pointer;
     z-index: 2;
     opacity: 0;
-
 }
 
 .input_container .radio_info{
@@ -78,11 +97,32 @@ input:checked + .radio_info label{
 
 /* Search Algorithms */
 .main_inputs_search_algorithms{
+    width: 100%;
     display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+@media (max-width: 1200px){
+    .main_inputs_search_algorithms{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        align-items: center;
+        grid-gap: 1rem;
+    }
+    
+}
+
+@media (max-width: 675px) {
+    .main_inputs_search_algorithms{
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: center;
+        grid-gap: 1rem;
+    }   
 }
 .btn_link{
     width: 100%;
-    
 }
 .btn_enviar{
     width: 100%;
@@ -92,7 +132,7 @@ input:checked + .radio_info label{
     border-radius: .2rem;
     border: 0;
     background-color: #1a73e8;
-    color: #Fff;
+    color: #fff;
 }
 
 .btn_enviar:hover{

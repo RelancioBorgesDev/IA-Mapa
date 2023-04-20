@@ -56,7 +56,7 @@ export const coordenadasEuropeu = {
     "Espanha": {lat: 40.4637, lng: -3.7492},
     "Estonia": {lat: 58.5953, lng: 25.0136},
     "Finlandia": {lat: 61.9241, lng: 25.7482},
-    "França": {lat: 46.2276, lng: 2.2137},
+    "Franca": {lat: 46.2276, lng: 2.2137},
     "Georgia": {lat: 42.3154, lng: 43.3569},
     "Grecia": {lat: 39.0742, lng: 21.8243},
     "Hungria": {lat: 47.1625, lng: 19.5033},
@@ -83,7 +83,7 @@ export const coordenadasEuropeu = {
     "San Marino": {"lat": 43.94236,"lng": 12.457777},
     "Servia": {"lat": 44.016521,"lng": 21.005859},
     "Suecia": {"lat": 60.128161,"lng": 18.643501},
-    "Suiça": {"lat": 46.818188,"lng": 8.227512},
+    "Suica": {"lat": 46.818188,"lng": 8.227512},
     "Ucrania": {"lat": 48.379433,"lng": 31.16558},
     "Vaticano": {"lat": 41.902916,"lng": 12.453389}
 };

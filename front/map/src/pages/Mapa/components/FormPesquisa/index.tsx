@@ -1,13 +1,12 @@
 import style from "./style.module.css";
-import { useContext, useEffect, useState } from "react";
-import { FormDataContext } from "../../../contexts/FormDataContext";
+import { useContext } from "react";
+import { FormDataContext } from "../../../../contexts/FormDataContext";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { IPesquisa } from "../../../contexts/PesquisaDadosContext";
-import { paisesAceitos } from "../../../utils/paisesValidos";
-import { toast } from "react-toastify";
+import { IPesquisa } from "../../../../contexts/PesquisaDadosContext";
+import { paisesAceitos } from "../../../../utils/paisesValidos";
 import "react-toastify/dist/ReactToastify.css";
+import * as z from "zod";
 
 const Pesquisa = z
   .object({
@@ -33,7 +32,7 @@ const Pesquisa = z
           .replace(/[\u0300-\u036f]/g, "")
           .replace(/[^a-zA-Z\s]/g, "");
         if (!paisesAceitos.includes(valorNormalizado)) {
-          console.log(valorNormalizado);
+          throw new Error("Destino inválido");
         }
         return true;
       }),
@@ -43,10 +42,12 @@ const Pesquisa = z
 
 interface IFormularioPesquisaProps {
   setPesquisaDados: React.Dispatch<React.SetStateAction<IPesquisa>>;
+  setFormEnviado: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function FormularioPesqusia({
+export default function FormularioPesquisa({
   setPesquisaDados,
+  setFormEnviado,
 }: IFormularioPesquisaProps) {
   const { dadosForm } = useContext(FormDataContext);
   const {
@@ -56,25 +57,31 @@ export default function FormularioPesqusia({
     reset,
   } = useForm<IPesquisa>({
     resolver: zodResolver(Pesquisa),
-    mode: "onBlur",
+    mode: "onSubmit",
   });
 
   const onSubmit: SubmitHandler<IPesquisa> = async (data) => {
-    await Pesquisa.parseAsync(data); // Verifica se os dados são válidos de acordo com a schema
-    setPesquisaDados({
-      partida: data.partida
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-zA-Z\s]/g, "")
-        .trim(),
-      destino: data.destino
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-zA-Z\s]/g, "")
-        .trim(),
-      limiteMaximo: data.limiteMaximo ? parseInt(data.limiteMaximo) : undefined,
-    });
-    reset();
+    if (!Object.keys(errors).length) {
+      setPesquisaDados({
+        partida: data.partida
+          .trim()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-zA-Z\s]/g, "")
+          .replace(/Ç/g, "C"),
+        destino: data.destino
+          .trim()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-zA-Z\s]/g, "")
+          .replace(/Ç/g, "C"),
+        limiteMaximo: data.limiteMaximo
+          ? parseInt(data.limiteMaximo)
+          : undefined,
+      });
+      setFormEnviado(true);
+      reset();
+    }
   };
 
   return (
@@ -93,9 +100,9 @@ export default function FormularioPesqusia({
           type='text'
           placeholder='Destino.....'
           {...register("destino")}
-          className={errors.partida ? style.inputError : ""}
+          className={errors.destino ? style.inputError : ""}
         />
-        {errors.partida && (
+        {errors.destino && (
           <span className={style.errorMessage}>{errors.destino?.message}</span>
         )}
         {dadosForm.algorithm === "profundidadelimitada" ||
@@ -104,12 +111,12 @@ export default function FormularioPesqusia({
             type='number'
             placeholder='Limite Máximo.....'
             {...register("limiteMaximo")}
-            className={errors.partida ? style.inputError : ""}
+            className={errors.limiteMaximo ? style.inputError : ""}
           />
         ) : (
           ""
         )}
-        {errors.partida && (
+        {errors.limiteMaximo && (
           <span className={style.errorMessage}>
             {errors.limiteMaximo?.message}
           </span>

@@ -13,17 +13,7 @@ interface ILeafletMapaProps {
   paises: Array<string>;
 }
 
-export default function LeafletMapa({
-  locais,
-  paises,
-}: ILeafletMapaProps) {
-  const coords = [];
-  for (let i = 1; i < locais.length - 1; i++) {
-    const { lat, lng } = locais[i];
-    coords.push([lat, lng]);
-  }
-
- 
+export default function LeafletMapa({ locais, paises }: ILeafletMapaProps) {
   return (
     <MapContainer
       center={[0, -50]}
@@ -38,7 +28,7 @@ export default function LeafletMapa({
       />
       {locais.length > 0 && (
         <Polyline
-          pathOptions={{ color: "blue" }}
+          pathOptions={{ color: "green" }}
           positions={locais.map((locais) => [locais.lat, locais.lng])}
         />
       )}
