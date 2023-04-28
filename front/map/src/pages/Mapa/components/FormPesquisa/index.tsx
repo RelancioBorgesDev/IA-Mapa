@@ -4,38 +4,23 @@ import { FormDataContext } from "../../../../contexts/FormDataContext";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IPesquisa } from "../../../../contexts/PesquisaDadosContext";
-import { paisesAceitos } from "../../../../utils/paisesValidos";
+import { paisesAceitos, paisesAfricanos, paisesAmericanos, paisesEuropeus } from "../../../../utils/paisesValidos";
 import "react-toastify/dist/ReactToastify.css";
 import * as z from "zod";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import "@mui/material/styles/"; 
 
 const Pesquisa = z
   .object({
     partida: z
       .string()
-      .nonempty({ message: "Campo obrigatório" })
-      .refine((value) => {
-        let valorNormalizado = value
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/[^a-zA-Z\s]/g, "");
-        if (!paisesAceitos.includes(valorNormalizado)) {
-          throw new Error("Destino inválido");
-        }
-        return true;
-      }),
+      .nonempty({ message: "Campo obrigatório" }),
+    
     destino: z
       .string()
-      .nonempty({ message: "Campo obrigatório" })
-      .refine((value) => {
-        let valorNormalizado = value
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/[^a-zA-Z\s]/g, "");
-        if (!paisesAceitos.includes(valorNormalizado)) {
-          throw new Error("Destino inválido");
-        }
-        return true;
-      }),
+      .nonempty({ message: "Campo obrigatório" }),
+   
     limiteMaximo: z.string().optional(),
   })
   .strict();
@@ -44,6 +29,7 @@ interface IFormularioPesquisaProps {
   setPesquisaDados: React.Dispatch<React.SetStateAction<IPesquisa>>;
   setFormEnviado: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
 
 export default function FormularioPesquisa({
   setPesquisaDados,
@@ -61,46 +47,58 @@ export default function FormularioPesquisa({
   });
 
   const onSubmit: SubmitHandler<IPesquisa> = async (data) => {
-    if (!Object.keys(errors).length) {
-      setPesquisaDados({
-        partida: data.partida
-          .trim()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/[^a-zA-Z\s]/g, "")
-          .replace(/Ç/g, "C"),
-        destino: data.destino
-          .trim()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .replace(/[^a-zA-Z\s]/g, "")
-          .replace(/Ç/g, "C"),
-        limiteMaximo: data.limiteMaximo
-          ? parseInt(data.limiteMaximo)
-          : undefined,
-      });
-      setFormEnviado(true);
-      reset();
-    }
+    console.log("Partida: " + data.partida)
+    setPesquisaDados({
+      partida: data.partida
+        .trim()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z\s]/g, "")
+        .replace(/Ç/g, "C"),
+      destino: data.destino
+        .trim()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z\s]/g, "")
+        .replace(/Ç/g, "C"),
+      limiteMaximo: data.limiteMaximo
+        ? parseInt(data.limiteMaximo)
+        : undefined,
+    });
+    setFormEnviado(true);
+    reset();
   };
+
+  function verificaContinenteEscolhido(){
+    console.log(dadosForm.continente)
+    if(dadosForm.continente == "Americano"){
+      return paisesAmericanos;
+    }else if(dadosForm.continente == "Europeu"){
+      return paisesEuropeus;
+    }else if(dadosForm.continente == "Africano"){
+      return paisesAfricanos;
+    }else{
+      return [];
+    }
+  }
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className={style.map_inputs}>
-        <input
-          type='text'
-          placeholder='Ponto de partida....'
-          {...register("partida")}
-          className={errors.partida ? style.inputError : ""}
-        />
+      <Autocomplete
+        options={verificaContinenteEscolhido()}
+        className={`${style.inputs} ${style.autocomplete}`}
+        sx={{ width: 300 }}
+        renderInput={(params) => <TextField {...params} label="Partida" {...register("partida")}/>}
+      />
         {errors.partida && (
           <span className={style.errorMessage}>{errors.partida?.message}</span>
         )}
-        <input
-          type='text'
-          placeholder='Destino.....'
-          {...register("destino")}
-          className={errors.destino ? style.inputError : ""}
+        <Autocomplete
+          disablePortal
+          options={verificaContinenteEscolhido()}
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} label="Destino" {...register("destino")} />}
         />
         {errors.destino && (
           <span className={style.errorMessage}>{errors.destino?.message}</span>

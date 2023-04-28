@@ -30,20 +30,6 @@
 }
 
 
-@media (max-width: 975px) {
-    .main_inputs_countries{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }   
-}
-
-@media (max-width: 675px) {
-    .main_inputs_countries{
-        display: grid;
-        grid-template-columns: 1fr;
-    }   
-}
-
 .input_container{
     position: relative;
     height: 7rem;
@@ -60,6 +46,10 @@
     cursor: pointer;
     z-index: 2;
     opacity: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .input_container .radio_info{
@@ -103,24 +93,6 @@ input:checked + .radio_info label{
     flex-wrap: nowrap;
 }
 
-@media (max-width: 1200px){
-    .main_inputs_search_algorithms{
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        align-items: center;
-        grid-gap: 1rem;
-    }
-    
-}
-
-@media (max-width: 675px) {
-    .main_inputs_search_algorithms{
-        display: grid;
-        grid-template-columns: 1fr;
-        align-items: center;
-        grid-gap: 1rem;
-    }   
-}
 .btn_link{
     width: 100%;
 }
@@ -139,3 +111,35 @@ input:checked + .radio_info label{
    cursor: pointer;
    background-color: #2f7de2;
 }
+
+@media (max-width: 675px) {
+    .main_inputs_search_algorithms{
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: center;
+        grid-gap: 1rem;
+    }   
+
+    .main_inputs_countries{
+        display: grid;
+        grid-template-columns: 1fr;
+    }   
+}
+
+@media (max-width: 975px) {
+    .main_inputs_countries{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }   
+}
+
+@media (max-width: 1200px){
+    .main_inputs_search_algorithms{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        align-items: center;
+        grid-gap: 1rem;
+    }
+    
+}
+
