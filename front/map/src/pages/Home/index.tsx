@@ -3,6 +3,10 @@ import { Link } from "react-router-dom";
 import { FormDataContext } from "../../contexts/FormDataContext";
 import style from "./style.module.css";
 import { FaGlobeEurope, FaGlobeAfrica, FaGlobeAmericas } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+
+
 export default function Home() {
   const { dadosForm, setDadosForm } = useContext(FormDataContext);
 
@@ -26,7 +30,7 @@ export default function Home() {
             />
             <div className={style.radio_info}>
               <label htmlFor='americano'>Americano</label>
-              <FaGlobeAmericas size={32}/>
+              <FaGlobeAmericas size={32} />
             </div>
           </div>
           <div className={style.input_container}>
@@ -39,7 +43,7 @@ export default function Home() {
             />
             <div className={style.radio_info}>
               <label htmlFor='europeu'>Europeu</label>
-              <FaGlobeEurope size={32}/>
+              <FaGlobeEurope size={32} />
             </div>
           </div>
           <div className={style.input_container}>
@@ -52,7 +56,7 @@ export default function Home() {
             />
             <div className={style.radio_info}>
               <label htmlFor='africano'>Africano</label>
-              <FaGlobeAfrica size={32}/>
+              <FaGlobeAfrica size={32} />
             </div>
           </div>
         </fieldset>
