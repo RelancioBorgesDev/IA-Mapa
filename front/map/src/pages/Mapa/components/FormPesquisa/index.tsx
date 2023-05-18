@@ -17,6 +17,7 @@ import "@mui/material/styles/";
 const Pesquisa = z
   .object({
     partida: z.string().nonempty({ message: "Campo obrigatório" }),
+
     destino: z.string().nonempty({ message: "Campo obrigatório" }),
     limiteMaximo: z.string().optional(),
   })
@@ -77,17 +78,29 @@ export default function FormularioPesquisa({
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className={style.map_inputs}>
-        <Select className={style.inputs} placeholder='Partida' {...register("partida")}>
+        <Select
+          className={style.inputs}
+          placeholder='Partida'
+          {...register("partida")}
+        >
           {verificaContinenteEscolhido().map((pais) => (
-            <option key={pais} value={pais}>{pais}</option>
+            <option key={pais} value={pais}>
+              {pais}
+            </option>
           ))}
         </Select>
         {errors.partida && (
           <span className={style.errorMessage}>{errors.partida?.message}</span>
         )}
-        <Select className={style.inputs}  placeholder='Destino' {...register("destino")}>
+        <Select
+          className={style.inputs}
+          placeholder='Destino'
+          {...register("destino")}
+        >
           {verificaContinenteEscolhido().map((pais) => (
-            <option key={pais}  value={pais}>{pais}</option>
+            <option key={pais} value={pais}>
+              {pais}
+            </option>
           ))}
         </Select>
         {errors.destino && (

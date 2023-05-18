@@ -1,7 +1,7 @@
 package com.relnc.api.buscamapa.file;
 
-import com.relnc.api.buscamapa.model.Location;
 import com.relnc.api.buscamapa.normalizer.PaisNormalizer;
+import com.relnc.api.buscamapa.structures.NodeEstrela;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -39,8 +39,8 @@ public class Arquivo {
         return mapa;
     }
 
-    public Map<String, Location> retornaCoordenadasCapitais(String path) {
-        Map<String, Location> mapa = new HashMap<>();
+    public Map<String, NodeEstrela> retornaCoordenadasCapitais(String path) {
+        Map<String, NodeEstrela> mapa = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String linha;
             PaisNormalizer pn = new PaisNormalizer();
@@ -51,7 +51,7 @@ public class Arquivo {
                 String[] valores = partes[1].split(",");
                 double lat = Double.parseDouble(valores[0]);
                 double lng = Double.parseDouble(valores[1]);
-                mapa.put(keyNormalized, new Location(lat, lng));
+                mapa.put(keyNormalized, new NodeEstrela(keyNormalized, lat, lng, null));
             }
         } catch (IOException e) {
             e.printStackTrace();

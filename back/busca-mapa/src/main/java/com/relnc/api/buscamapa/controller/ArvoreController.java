@@ -2,7 +2,9 @@ package com.relnc.api.buscamapa.controller;
 
 import com.relnc.api.buscamapa.file.Arquivo;
 import com.relnc.api.buscamapa.structures.Lista;
+import com.relnc.api.buscamapa.structures.ListaDupla;
 import com.relnc.api.buscamapa.structures.Node;
+import com.relnc.api.buscamapa.structures.NodeEstrela;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -293,4 +295,187 @@ public class ArvoreController {
 
         return Collections.singleton("Caminho não encontrado"); // caminho não encontrado
     }
+
+    @GetMapping("/aestrela/{continente}/{inicio}/{fim}")
+    public List<String> aEstrela(@PathVariable("continente") String continente,
+                               @PathVariable("inicio") String inicio,
+                               @PathVariable("fim") String fim) {
+        Arquivo grafo = new Arquivo();
+        Map<String, Set<String>> mapaLocais = grafo.retornaPaises(continente);
+        String coordenada = veirificaPaisRetornaCoordenadas(continente);
+        Map<String, NodeEstrela> coordenadas = grafo.retornaCoordenadasCapitais(coordenada);
+        PriorityQueue<NodeEstrela> pq = new PriorityQueue<>(Comparator.comparingDouble(NodeEstrela::getFn));
+
+        Map<String, NodeEstrela> visitados = new HashMap<>();
+        NodeEstrela noPartida = coordenadas.get(inicio);
+        noPartida.setCusto(0);
+        noPartida.setCustoAproximado(menorDistanciaEntreDoisPaises(inicio, fim, coordenada));
+        noPartida.setFn(calculoDoFn(noPartida.getCusto(),noPartida.getCustoAproximado()));
+        pq.add(noPartida);
+
+        List<String> caminho = new ArrayList<>();
+
+        while (!pq.isEmpty()) {
+            NodeEstrela atual = pq.poll();
+
+            if (visitados.containsKey(atual.getNome())) {
+                continue;
+            }
+
+            visitados.put(atual.getNome(), atual);
+
+            if (Objects.equals(atual.getNome(), fim)) {
+
+                NodeEstrela no = atual;
+                while (no != null) {
+                    caminho.add(no.getNome());
+                    no = no.getPai();
+                }
+                Collections.reverse(caminho);
+                return caminho;
+            }
+
+            Set<String> conexoes = mapaLocais.get(atual.getNome());
+            for (String conexao : conexoes) {
+                if (visitados.containsKey(conexao)) {
+                    continue;
+                }
+                if (!coordenadas.containsKey(conexao)) {
+                    continue;
+                }
+                NodeEstrela novoNo = coordenadas.get(conexao);
+                double custo = atual.getCusto() + Math.abs(calculoDoCusto(conexao, coordenada));
+                if (!visitados.containsKey(conexao) || custo < novoNo.getCusto()) {
+                    novoNo.setCusto((int) custo);
+                    novoNo.setCustoAproximado(menorDistanciaEntreDoisPaises(conexao, fim, coordenada));
+                    novoNo.setFn(calculoDoFn(novoNo.getCusto(), novoNo.getCustoAproximado()));
+                    novoNo.setPai(atual);
+                    pq.add(novoNo);
+                }
+            }
+        }
+
+        return (List<String>) Collections.singleton("Caminho não encontrado");
+    }
+
+    @GetMapping("/greedy/{continente}/{inicio}/{fim}")
+    public List<String> greedy(@PathVariable("continente") String continente,
+                              @PathVariable("inicio") String inicio,
+                              @PathVariable("fim") String fim ) {
+        Arquivo grafo = new Arquivo();
+        Map<String, Set<String>> mapaLocais = grafo.retornaPaises(continente);
+        String coordenada = veirificaPaisRetornaCoordenadas(continente);
+        Map<String, NodeEstrela> coordenadas = grafo.retornaCoordenadasCapitais(coordenada);
+
+        PriorityQueue<NodeEstrela> pq = new PriorityQueue<>(Comparator.comparingDouble(NodeEstrela::getCustoAproximado));
+
+        Map<String, NodeEstrela> visitados = new HashMap<>();
+        NodeEstrela noPartida = coordenadas.get(inicio);
+        noPartida.setCusto(0);
+        noPartida.setCustoAproximado(menorDistanciaEntreDoisPaises(inicio, fim, coordenada));
+        pq.add(noPartida);
+
+        List<String> caminho = new ArrayList<>();
+
+        while (!pq.isEmpty()) {
+            NodeEstrela atual = pq.poll();
+
+            if (visitados.containsKey(atual.getNome())) {
+                continue;
+            }
+
+            visitados.put(atual.getNome(), atual);
+
+            if (Objects.equals(atual.getNome(), fim)) {
+
+                NodeEstrela no = atual;
+                while (no != null) {
+                    caminho.add(no.getNome());
+                    no = no.getPai();
+                }
+                Collections.reverse(caminho);
+                return caminho;
+            }
+
+            Set<String> conexoes = mapaLocais.get(atual.getNome());
+            for (String conexao : conexoes) {
+                if (visitados.containsKey(conexao)) {
+                    continue;
+                }
+                if (!coordenadas.containsKey(conexao)) {
+                    continue;
+                }
+                NodeEstrela novoNo = coordenadas.get(conexao);
+                double custo = atual.getCusto() + Math.abs(calculoDoCusto(conexao, coordenada));
+                if (!visitados.containsKey(conexao) || custo < novoNo.getCusto()) {
+                    novoNo.setCusto((int) custo);
+                    novoNo.setCustoAproximado(menorDistanciaEntreDoisPaises(conexao, fim, coordenada));
+                    novoNo.setPai(atual);
+                    pq.add(novoNo);
+                }
+            }
+        }
+
+        return (List<String>) Collections.singleton("Caminho não encontrado");
+    }
+
+    private Integer calculoDoFn(Integer custo, Integer custoAproximado){
+        return custo + custoAproximado;
+    }
+
+    private Integer calculoDoCusto(String pais, String coordenada){
+        Arquivo grafo = new Arquivo();
+        Map<String, NodeEstrela> mapaCoordenadasCapitais = grafo.retornaCoordenadasCapitais(coordenada);
+        NodeEstrela pais1Location = mapaCoordenadasCapitais.get(pais);
+
+        return (int) (pais1Location.getLat() + pais1Location.getLng());
+    }
+
+    public Integer menorDistanciaEntreDoisPaises(String pais1, String pais2, String coordenada) {
+        Arquivo grafo = new Arquivo(); //Criar a classe que manipula os arquivos
+
+        Map<String, NodeEstrela> mapaCoordenadasCapitais = grafo.retornaCoordenadasCapitais(coordenada);
+
+        //Verifica se os países existem no mapa
+        if (!mapaCoordenadasCapitais.containsKey(pais1) || !mapaCoordenadasCapitais.containsKey(pais2)) {
+            throw new IllegalArgumentException("Países não encontrados no mapa de coordenadas.");
+        }
+
+        //Objeto Location que contém as coordenadas do país1
+        NodeEstrela pais1Location = mapaCoordenadasCapitais.get(pais1);
+        //Objeto Location que contém as coordenadas do país2
+        NodeEstrela pais2Location = mapaCoordenadasCapitais.get(pais2);
+
+        // Retorna a distancia em km;
+        return (int) Math.round(calculaDistanciaHaversine(pais1Location, pais2Location));
+    }
+
+    private static double calculaDistanciaHaversine(NodeEstrela pais1Location, NodeEstrela pais2Location) {
+        //Raio de curvatura aproximado em
+        final double R = 6371;
+        //Transformando os valores de lat e lng em radianos
+        double lat1 = Math.toRadians(pais1Location.getLat());
+        double lng1 = Math.toRadians(pais1Location.getLng());
+        double lat2 = Math.toRadians(pais2Location.getLat());
+        double lng2 = Math.toRadians(pais2Location.getLng());
+
+        //Calculado a diferença entre (x2-x1) (y2-y1)
+        double diferencaLat = lat2 - lat1;
+        double diferencaLng = lng2 - lng1;
+
+        double a = Math.sin(diferencaLat / 2) * Math.sin(diferencaLat / 2)
+                + Math.cos(lat1) * Math.cos(lat2) * Math.sin(diferencaLng / 2) * Math.sin(diferencaLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
+    private String veirificaPaisRetornaCoordenadas(String path) {
+        return switch (path) {
+            case "americano" -> "coords_caps_americano";
+            case "europeu" -> "coords_caps_europeu";
+            case "africano" -> "coords_caps_africano";
+            default -> "";
+        };
+    }
+
 }
