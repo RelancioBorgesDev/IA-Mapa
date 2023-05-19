@@ -2,7 +2,6 @@ package com.relnc.api.buscamapa.controller;
 
 import com.relnc.api.buscamapa.file.Arquivo;
 import com.relnc.api.buscamapa.structures.Lista;
-import com.relnc.api.buscamapa.structures.ListaDupla;
 import com.relnc.api.buscamapa.structures.Node;
 import com.relnc.api.buscamapa.structures.NodeEstrela;
 import org.springframework.http.MediaType;
@@ -10,17 +9,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+import static com.relnc.api.buscamapa.utils.MetodosUtils.*;
+
 @RestController
 @RequestMapping("/api/algoritimos")
 @CrossOrigin(origins = "*")
 public class ArvoreController {
+    Arquivo arq = new Arquivo();
+
     @GetMapping(path = "/amplitude/{continente}/{inicio}/{fim}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Set<String> amplitude(
+    public List<String> amplitude(
             @PathVariable("continente") String continente,
             @PathVariable("inicio") String inicio,
             @PathVariable("fim") String fim
                                   ) {
-        Arquivo arq = new Arquivo();
+
         Lista l1 = new Lista(); // fila de nós para visitar
         Lista l2 = new Lista(); // árvore de busca (nós visitados)
         Map<String, Set<String>> grafo = arq.retornaPaises(continente); // grafo de conexões
@@ -35,7 +38,7 @@ public class ArvoreController {
         // marca o nó inicial como visitado
         visitados.add(inicio);
 
-        Set<String> caminho = new LinkedHashSet<>();
+        List<String> caminho = new LinkedList<>();
 
         while (!l1.vazio()) {
             Node atual = l1.removeInicio();// remove o primeiro nó da fila
@@ -59,14 +62,14 @@ public class ArvoreController {
         }
 
 
-        return Collections.singleton("Caminho não encontrado"); // caminho não encontrado
+        return null;
     }
 
     @GetMapping(path = "/profundidade/{continente}/{inicio}/{fim}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Set<String> profundidade(   @PathVariable("continente") String continente,
+    public List<String> profundidade(   @PathVariable("continente") String continente,
                                        @PathVariable("inicio") String inicio,
                                        @PathVariable("fim") String fim) {
-        Arquivo arq = new Arquivo();
+
         Lista l1 = new Lista(); // fila de nós para visitar
         Lista l2 = new Lista(); // árvore de busca (nós visitados)
         Map<String, Set<String>> grafo = arq.retornaPaises(continente); // grafo de conexões
@@ -80,7 +83,7 @@ public class ArvoreController {
         // marca o nó inicial como visitado
         visitados.add(inicio);
 
-        Set<String> caminho = new LinkedHashSet<>();
+        List<String> caminho = new LinkedList<>();
 
         while (!l1.vazio()) {
             Node atual = l1.removeFim(); // remove o primeiro nó da fila
@@ -105,15 +108,15 @@ public class ArvoreController {
             }
         }
 
-        return Collections.singleton("Caminho não encontrado"); // caminho não encontrado
+        return null;
     }
 
     @GetMapping(path = "/profundidadelimitada/{continente}/{inicio}/{fim}/{limite}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Set<String> profundidadeLimitada(   @PathVariable("continente") String continente,
+    public List<String> profundidadeLimitada(   @PathVariable("continente") String continente,
                                                @PathVariable("inicio") String inicio,
                                                @PathVariable("fim") String fim,
                                                @PathVariable("limite") int limite) {
-        Arquivo arq = new Arquivo();
+
         Lista l1 = new Lista(); // pilha de nós para visitar
         Lista l2 = new Lista(); // árvore de busca (nós visitados)
         Map<String, Set<String>> grafo = arq.retornaPaises(continente); // grafo de conexões
@@ -126,7 +129,7 @@ public class ArvoreController {
 
         // marca o nó inicial como visitado
         visitados.add(inicio);
-        Set<String> caminho = new LinkedHashSet<>();
+        List<String> caminho = new LinkedList<>();
 
         while (!l1.vazio()) {
             Node atual = l1.removeFim(); // remove o primeiro nó da fila
@@ -154,15 +157,15 @@ public class ArvoreController {
             }
         }
 
-        return Collections.singleton("Caminho não encontrado"); // caminho não encontrado
+        return null; // caminho não encontrado
     }
 
     @GetMapping(path = "/aprofundamentoiterativo/{continente}/{inicio}/{fim}/{limiteMaximo}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Set<String> aprofundamentoIterativo(@PathVariable("continente") String continente,
+    public List<String> aprofundamentoIterativo(@PathVariable("continente") String continente,
                                                @PathVariable("inicio") String inicio,
                                                @PathVariable("fim") String fim,
                                                @PathVariable("limiteMaximo") int limiteMaximo) {
-        Arquivo arq = new Arquivo();
+
         Lista l1 = new Lista(); // pilha de nós para visitar
         Lista l2 = new Lista(); // árvore de busca (nós visitados)
         Set<Object> visitados = new HashSet<>(); // conjunto de nós visitados
@@ -174,7 +177,7 @@ public class ArvoreController {
 
         // marca o nó inicial como visitado
         visitados.add(inicio);
-        Set<String> caminho = new LinkedHashSet<>();
+        List<String> caminho = new LinkedList<>();
         for (int i = 0; i < limiteMaximo; i++) {
             Lista l1Temp = new Lista(); // pilha temporária para os nós visitados nesta iteração
 
@@ -205,11 +208,11 @@ public class ArvoreController {
             l1 = l1Temp; // atualiza a pilha de visitas para a próxima iteração
         }
 
-        return Collections.singleton("Caminho não encontrado"); // caminho não encontrado
+        return null; // caminho não encontrado
     }
     @GetMapping(path = "/bidirecional/{continente}/{inicio}/{fim}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Set<String> bidirecional(@PathVariable("continente") String continente, @PathVariable("inicio") Object inicio, @PathVariable("fim") Object fim) {
-        Arquivo arq = new Arquivo();
+    public List<String> bidirecional(@PathVariable("continente") String continente, @PathVariable("inicio") Object inicio, @PathVariable("fim") Object fim) {
+
         Lista l1 = new Lista(); // fila de nós para visitar
         Lista l3 = new Lista(); // fila de nós para visitar da segunda árvore
 
@@ -236,8 +239,8 @@ public class ArvoreController {
         // marca o nó inicial como visitado da segunda árvore
         visitados2.add(ultimo);
 
-        Set<String> caminho1 = new LinkedHashSet<>();
-        Set<String> caminho2 = new LinkedHashSet<>();
+        List<String> caminho1 = new LinkedList<>();
+        List<String> caminho2 = new LinkedList<>();
         int ni = 0;
         while(!l1.vazio() || !l3.vazio()){
             //Procura na árvore 1 que começa pelo início
@@ -293,17 +296,17 @@ public class ArvoreController {
             ni += 1;
         }
 
-        return Collections.singleton("Caminho não encontrado"); // caminho não encontrado
+        return null; // caminho não encontrado
     }
 
     @GetMapping("/aestrela/{continente}/{inicio}/{fim}")
     public List<String> aEstrela(@PathVariable("continente") String continente,
                                @PathVariable("inicio") String inicio,
                                @PathVariable("fim") String fim) {
-        Arquivo grafo = new Arquivo();
-        Map<String, Set<String>> mapaLocais = grafo.retornaPaises(continente);
+
+        Map<String, Set<String>> mapaLocais = arq.retornaPaises(continente);
         String coordenada = veirificaPaisRetornaCoordenadas(continente);
-        Map<String, NodeEstrela> coordenadas = grafo.retornaCoordenadasCapitais(coordenada);
+        Map<String, NodeEstrela> coordenadas = arq.retornaCoordenadasCapitais(coordenada);
         PriorityQueue<NodeEstrela> pq = new PriorityQueue<>(Comparator.comparingDouble(NodeEstrela::getFn));
 
         Map<String, NodeEstrela> visitados = new HashMap<>();
@@ -355,17 +358,17 @@ public class ArvoreController {
             }
         }
 
-        return (List<String>) Collections.singleton("Caminho não encontrado");
+        return null;
     }
 
     @GetMapping("/greedy/{continente}/{inicio}/{fim}")
     public List<String> greedy(@PathVariable("continente") String continente,
                               @PathVariable("inicio") String inicio,
                               @PathVariable("fim") String fim ) {
-        Arquivo grafo = new Arquivo();
-        Map<String, Set<String>> mapaLocais = grafo.retornaPaises(continente);
+
+        Map<String, Set<String>> mapaLocais = arq.retornaPaises(continente);
         String coordenada = veirificaPaisRetornaCoordenadas(continente);
-        Map<String, NodeEstrela> coordenadas = grafo.retornaCoordenadasCapitais(coordenada);
+        Map<String, NodeEstrela> coordenadas = arq.retornaCoordenadasCapitais(coordenada);
 
         PriorityQueue<NodeEstrela> pq = new PriorityQueue<>(Comparator.comparingDouble(NodeEstrela::getCustoAproximado));
 
@@ -416,66 +419,7 @@ public class ArvoreController {
             }
         }
 
-        return (List<String>) Collections.singleton("Caminho não encontrado");
-    }
-
-    private Integer calculoDoFn(Integer custo, Integer custoAproximado){
-        return custo + custoAproximado;
-    }
-
-    private Integer calculoDoCusto(String pais, String coordenada){
-        Arquivo grafo = new Arquivo();
-        Map<String, NodeEstrela> mapaCoordenadasCapitais = grafo.retornaCoordenadasCapitais(coordenada);
-        NodeEstrela pais1Location = mapaCoordenadasCapitais.get(pais);
-
-        return (int) (pais1Location.getLat() + pais1Location.getLng());
-    }
-
-    public Integer menorDistanciaEntreDoisPaises(String pais1, String pais2, String coordenada) {
-        Arquivo grafo = new Arquivo(); //Criar a classe que manipula os arquivos
-
-        Map<String, NodeEstrela> mapaCoordenadasCapitais = grafo.retornaCoordenadasCapitais(coordenada);
-
-        //Verifica se os países existem no mapa
-        if (!mapaCoordenadasCapitais.containsKey(pais1) || !mapaCoordenadasCapitais.containsKey(pais2)) {
-            throw new IllegalArgumentException("Países não encontrados no mapa de coordenadas.");
-        }
-
-        //Objeto Location que contém as coordenadas do país1
-        NodeEstrela pais1Location = mapaCoordenadasCapitais.get(pais1);
-        //Objeto Location que contém as coordenadas do país2
-        NodeEstrela pais2Location = mapaCoordenadasCapitais.get(pais2);
-
-        // Retorna a distancia em km;
-        return (int) Math.round(calculaDistanciaHaversine(pais1Location, pais2Location));
-    }
-
-    private static double calculaDistanciaHaversine(NodeEstrela pais1Location, NodeEstrela pais2Location) {
-        //Raio de curvatura aproximado em
-        final double R = 6371;
-        //Transformando os valores de lat e lng em radianos
-        double lat1 = Math.toRadians(pais1Location.getLat());
-        double lng1 = Math.toRadians(pais1Location.getLng());
-        double lat2 = Math.toRadians(pais2Location.getLat());
-        double lng2 = Math.toRadians(pais2Location.getLng());
-
-        //Calculado a diferença entre (x2-x1) (y2-y1)
-        double diferencaLat = lat2 - lat1;
-        double diferencaLng = lng2 - lng1;
-
-        double a = Math.sin(diferencaLat / 2) * Math.sin(diferencaLat / 2)
-                + Math.cos(lat1) * Math.cos(lat2) * Math.sin(diferencaLng / 2) * Math.sin(diferencaLng / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    }
-
-    private String veirificaPaisRetornaCoordenadas(String path) {
-        return switch (path) {
-            case "americano" -> "coords_caps_americano";
-            case "europeu" -> "coords_caps_europeu";
-            case "africano" -> "coords_caps_africano";
-            default -> "";
-        };
+        return null;
     }
 
 }

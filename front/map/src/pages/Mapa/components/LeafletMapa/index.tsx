@@ -6,7 +6,7 @@ import {
   Popup,
   TileLayer,
 } from "react-leaflet";
-import { ILocations } from "..";
+import { ILocations } from "../../index";
 
 interface ILeafletMapaProps {
   locais: ILocations[];

@@ -1,15 +1,14 @@
 package com.relnc.api.buscamapa.file;
 
+import com.relnc.api.buscamapa.model.MetodoLabel;
 import com.relnc.api.buscamapa.normalizer.PaisNormalizer;
 import com.relnc.api.buscamapa.structures.NodeEstrela;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.Method;
+import java.util.*;
 
 public class Arquivo {
 
@@ -57,5 +56,19 @@ public class Arquivo {
             e.printStackTrace();
         }
         return mapa;
+    }
+
+    public List<MetodoLabel> retornaNomeDosMetodos(){
+        List<MetodoLabel> metodosNomes = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader("nome_dos_metodos"))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] partes = linha.split(",");
+                Arrays.stream(partes).forEach((metodoNome) -> metodosNomes.add(new MetodoLabel(metodoNome)));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return metodosNomes;
     }
 }

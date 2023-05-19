@@ -1,19 +1,14 @@
 import { useState, useEffect, useContext } from "react";
 
 import style from "./style.module.css";
-import {
-  coordenadasEuropeu,
-  coordenadasAfrica,
-  coordenadasAmericano,
-  ICoordenadas,
-} from "../../utils/coordenadas";
 import { FormDataContext } from "../../contexts/FormDataContext";
 import FormularioPesqusia from "./components/FormPesquisa";
 import { PesquisaDadosContext } from "../../contexts/PesquisaDadosContext";
-import { api } from "../../api/api";
+import { apiAlgoritimos } from "../../api/api";
 import LeafletMapa from "./components/LeafletMapa";
 import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
+import { PaisesContext } from "../../contexts/PaisesContext";
 
 export interface ILocations {
   lat: number;
@@ -23,6 +18,7 @@ export interface ILocations {
 export default function Mapa() {
   const { dadosForm } = useContext(FormDataContext);
   const { pesquisaDados, setPesquisaDados } = useContext(PesquisaDadosContext);
+  const { paisesCoordenadas } = useContext(PaisesContext);
 
   const [locais, setLocais] = useState<ILocations[]>([]);
   const [paises, setPaises] = useState<Array<string>>([]);
@@ -38,13 +34,13 @@ export default function Mapa() {
       dadosForm.algorithm == "profundidadelimitada" ||
       dadosForm.algorithm == "aprofundamentoiterativo"
     ) {
-      resposta = await api.get(
+      resposta = await apiAlgoritimos.get(
         `/${algorithm
           .toLowerCase()
           .trim()}/${continente.toLowerCase()}/${partida}/${destino}/${limiteMaximo}`
       );
     } else {
-      resposta = await api.get(
+      resposta = await apiAlgoritimos.get(
         `/${algorithm.toLowerCase()}/${continente.toLowerCase()}/${partida}/${destino}`
       );
     }
@@ -52,24 +48,9 @@ export default function Mapa() {
     setPrimeiraRequisicao(true);
   }
 
-  function verificaContinenteRetornaObjetoCoordenadas(): ICoordenadas {
-    const { continente } = dadosForm;
-    switch (continente.toLowerCase()) {
-      case "americano":
-        return coordenadasAmericano;
-      case "europeu":
-        return coordenadasEuropeu;
-      case "africano":
-        return coordenadasAfrica;
-      default:
-        return {};
-    }
-  }
-
   function verificaPaisesERetornaCoordenadas(paises: Array<string>) {
-    const objCoordenada = verificaContinenteRetornaObjetoCoordenadas();
     paises.map((pais: string) => {
-      const coordenadas = objCoordenada[pais];
+      const coordenadas = paisesCoordenadas[pais];
       if (coordenadas) {
         const lat: number = coordenadas.lat;
         const lng: number = coordenadas.lng;

@@ -7,7 +7,6 @@ public class NodeEstrela {
     private String nome;
     private int custo;
     private int custoAproximado;
-
     private int fn;
     private double lat;
     private double lng;

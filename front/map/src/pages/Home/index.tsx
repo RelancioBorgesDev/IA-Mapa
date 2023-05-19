@@ -1,14 +1,28 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FormDataContext } from "../../contexts/FormDataContext";
 import style from "./style.module.css";
 import { FaGlobeEurope, FaGlobeAfrica, FaGlobeAmericas } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { apiMetodos } from "../../api/api";
 
+interface IMetodos {
+  label: string;
+}
 
 export default function Home() {
   const { dadosForm, setDadosForm } = useContext(FormDataContext);
+  const [metodos, setMetodos] = useState<Array<IMetodos>>([]);
+
+  async function recebeMetodos() {
+    const respostaMetodos = await apiMetodos.get("listaMetodosNomes");
+    setMetodos(respostaMetodos.data);
+  }
+
+  useEffect(() => {
+    recebeMetodos();
+  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -62,74 +76,20 @@ export default function Home() {
         </fieldset>
         <h1>Selecione um algoritimo de busca</h1>
         <div className={style.main_inputs_search_algorithms}>
-          <div className={style.input_container}>
-            <input
-              type='radio'
-              name='algorithm'
-              id='amplitude'
-              value='Amplitude'
-              onChange={handleChange}
-            />
-            <div className={style.radio_info}>
-              <label htmlFor='amplitude'>Amplitude</label>
+          {metodos.map(({label}) => (
+            <div className={style.input_container}>
+              <input
+                type='radio'
+                name='algorithm'
+                id='amplitude'
+                value={label.toLowerCase()}
+                onChange={handleChange}
+              />
+              <div className={style.radio_info}>
+                <label htmlFor='amplitude'>{label}</label>
+              </div>
             </div>
-          </div>
-
-          <div className={style.input_container}>
-            <input
-              type='radio'
-              name='algorithm'
-              id='profundidade'
-              value='Profundidade'
-              onChange={handleChange}
-            />
-            <div className={style.radio_info}>
-              <label htmlFor='profundidade'>Profundidade</label>
-            </div>
-          </div>
-
-          <div className={style.input_container}>
-            <input
-              type='radio'
-              name='algorithm'
-              id='profundidade_limitada'
-              value='profundidadelimitada'
-              onChange={handleChange}
-            />
-            <div className={style.radio_info}>
-              <label htmlFor='profundidade_limitada'>
-                Profundidade Limitada
-              </label>
-            </div>
-          </div>
-
-          <div className={style.input_container}>
-            <input
-              type='radio'
-              name='algorithm'
-              id='aprofundamento_iterativo'
-              value='aprofundamentoiterativo'
-              onChange={handleChange}
-            />
-            <div className={style.radio_info}>
-              <label htmlFor='aprofundamento_iterativo'>
-                Aprofundamento Iterativo
-              </label>
-            </div>
-          </div>
-
-          <div className={style.input_container}>
-            <input
-              type='radio'
-              name='algorithm'
-              id='bidirecional'
-              value='Bidirecional'
-              onChange={handleChange}
-            />
-            <div className={style.radio_info}>
-              <label htmlFor='bidirecional'>Bidirecional</label>
-            </div>
-          </div>
+          ))}
         </div>
 
         <Link className={style.btn_link} to='/mapa'>

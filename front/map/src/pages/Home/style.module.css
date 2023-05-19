@@ -33,7 +33,7 @@
 .input_container{
     position: relative;
     height: 7rem;
-    width: 100%;
+    width: fit-content;
     margin: 0.5rem;
     overflow: hidden;
 }

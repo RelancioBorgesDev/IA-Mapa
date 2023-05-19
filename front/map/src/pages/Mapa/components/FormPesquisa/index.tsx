@@ -4,15 +4,12 @@ import { FormDataContext } from "../../../../contexts/FormDataContext";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IPesquisa } from "../../../../contexts/PesquisaDadosContext";
-import {
-  paisesAfricanos,
-  paisesAmericanos,
-  paisesEuropeus,
-} from "../../../../utils/paisesValidos";
+
 import "react-toastify/dist/ReactToastify.css";
 import * as z from "zod";
 import { Select } from "@chakra-ui/react";
 import "@mui/material/styles/";
+import { PaisesContext } from "../../../../contexts/PaisesContext";
 
 const Pesquisa = z
   .object({
@@ -33,6 +30,8 @@ export default function FormularioPesquisa({
   setFormEnviado,
 }: IFormularioPesquisaProps) {
   const { dadosForm } = useContext(FormDataContext);
+  const {paises} = useContext(PaisesContext);
+  
   const {
     register,
     handleSubmit,
@@ -63,18 +62,6 @@ export default function FormularioPesquisa({
     reset();
   };
 
-  function verificaContinenteEscolhido() {
-    if (dadosForm.continente == "Americano") {
-      return paisesAmericanos;
-    } else if (dadosForm.continente == "Europeu") {
-      return paisesEuropeus;
-    } else if (dadosForm.continente == "Africano") {
-      return paisesAfricanos;
-    } else {
-      return [];
-    }
-  }
-
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className={style.map_inputs}>
@@ -83,9 +70,9 @@ export default function FormularioPesquisa({
           placeholder='Partida'
           {...register("partida")}
         >
-          {verificaContinenteEscolhido().map((pais) => (
-            <option key={pais} value={pais}>
-              {pais}
+          {paises.map(({nome}) => (
+            <option key={nome} value={nome}>
+              {nome}
             </option>
           ))}
         </Select>
@@ -97,9 +84,9 @@ export default function FormularioPesquisa({
           placeholder='Destino'
           {...register("destino")}
         >
-          {verificaContinenteEscolhido().map((pais) => (
-            <option key={pais} value={pais}>
-              {pais}
+          {paises.map(({nome}) => (
+            <option key={nome} value={nome}>
+              {nome}
             </option>
           ))}
         </Select>
