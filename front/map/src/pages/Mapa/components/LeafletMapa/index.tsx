@@ -17,7 +17,7 @@ export default function LeafletMapa({ locais, paises }: ILeafletMapaProps) {
   return (
     <MapContainer
       center={[0, -50]}
-      zoom={2}
+      zoom={3}
       style={{ height: "100%", width: "100%" }}
       preferCanvas={true}
     >

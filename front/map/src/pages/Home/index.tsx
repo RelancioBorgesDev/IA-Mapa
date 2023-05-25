@@ -4,6 +4,7 @@ import { FormDataContext } from "../../contexts/FormDataContext";
 import style from "./style.module.css";
 import { FaGlobeEurope, FaGlobeAfrica, FaGlobeAmericas } from "react-icons/fa";
 import { apiMetodos } from "../../api/api";
+import { toast } from "react-toastify";
 
 interface IMetodos {
   label: string;
@@ -12,10 +13,15 @@ interface IMetodos {
 export default function Home() {
   const { dadosForm, setDadosForm } = useContext(FormDataContext);
   const [metodos, setMetodos] = useState<Array<IMetodos>>([]);
+  const [isCamposVazios, setIsCamposVazios] = useState(false);
 
   async function recebeMetodos() {
     const respostaMetodos = await apiMetodos.get("listaMetodosNomes");
     setMetodos(respostaMetodos.data);
+
+    if (!dadosForm.continente || !dadosForm.algorithm) {
+      setIsCamposVazios(true);
+    }
   }
 
   useEffect(() => {
@@ -25,6 +31,7 @@ export default function Home() {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setDadosForm({ ...dadosForm, [name]: value });
+    setIsCamposVazios(false);
   };
 
   return (
@@ -91,10 +98,14 @@ export default function Home() {
         </div>
 
         <Link className={style.btn_link} to='/mapa'>
-          <button type='submit' className={style.btn_enviar}>
+          <button type='submit' className={style.btn_enviar} disabled={isCamposVazios}>
             Enviar
           </button>
         </Link>
+
+        {isCamposVazios && (
+        <p className={style.error_message}>Campos Vazios</p>
+        )}
       </form>
     </main>
   );
