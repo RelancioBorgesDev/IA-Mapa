@@ -26,13 +26,19 @@ export default function Mapa() {
   const [formEnviado, setFormEnviado] = useState(false);
 
   async function recebePaises() {
+    const { algorithm, continente } = dadosForm;
+
+    if(!continente){
+      return;
+    }
+
     limparVetor();
     let resposta;
-    const { algorithm, continente } = dadosForm;
     const { destino, partida, limiteMaximo } = pesquisaDados;
     if (
       dadosForm.algorithm == "profundidadelimitada" ||
-      dadosForm.algorithm == "aprofundamentoiterativo"
+      dadosForm.algorithm == "aprofundamentoiterativo" ||
+      dadosForm.algorithm == "aia"
     ) {
       resposta = await apiAlgoritimos.get(
         `/${algorithm

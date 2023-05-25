@@ -30,8 +30,8 @@ export default function FormularioPesquisa({
   setFormEnviado,
 }: IFormularioPesquisaProps) {
   const { dadosForm } = useContext(FormDataContext);
-  const {paises} = useContext(PaisesContext);
-  
+  const { paises } = useContext(PaisesContext);
+
   const {
     register,
     handleSubmit,
@@ -70,7 +70,7 @@ export default function FormularioPesquisa({
           placeholder='Partida'
           {...register("partida")}
         >
-          {paises.map(({nome}) => (
+          {paises.map(({ nome }) => (
             <option key={nome} value={nome}>
               {nome}
             </option>
@@ -84,7 +84,7 @@ export default function FormularioPesquisa({
           placeholder='Destino'
           {...register("destino")}
         >
-          {paises.map(({nome}) => (
+          {paises.map(({ nome }) => (
             <option key={nome} value={nome}>
               {nome}
             </option>
@@ -95,7 +95,8 @@ export default function FormularioPesquisa({
         )}
 
         {dadosForm.algorithm === "profundidadelimitada" ||
-        dadosForm.algorithm === "aprofundamentoiterativo" ? (
+        dadosForm.algorithm === "aprofundamentoiterativo" ||
+        dadosForm.algorithm === "aia" ? (
           <input
             type='number'
             placeholder='Limite Máximo.....'

@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import { FormDataContext } from "../../contexts/FormDataContext";
 import style from "./style.module.css";
 import { FaGlobeEurope, FaGlobeAfrica, FaGlobeAmericas } from "react-icons/fa";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { apiMetodos } from "../../api/api";
 
 interface IMetodos {
@@ -76,8 +74,8 @@ export default function Home() {
         </fieldset>
         <h1>Selecione um algoritimo de busca</h1>
         <div className={style.main_inputs_search_algorithms}>
-          {metodos.map(({label}) => (
-            <div className={style.input_container}>
+          {metodos.map(({label}, index) => (
+            <div key={index} className={style.input_container}>
               <input
                 type='radio'
                 name='algorithm'

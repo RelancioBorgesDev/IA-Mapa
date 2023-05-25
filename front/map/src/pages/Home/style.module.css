@@ -1,24 +1,26 @@
-.main{
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.formulario{
-    width: 80%;
+.main {
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
-    padding-top: 2rem;
+    text-align: center;
+    padding: 1rem;
+    overflow: auto;
+  }
+  
+  .formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 1200px; /* Ajuste o valor conforme necessário */
+    margin: 0 auto;
     padding: 2rem;
     background-color: #222;
     border-radius: .5rem;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-}
+  }
 
 .main_inputs_countries{
     width: 100%;
@@ -31,9 +33,9 @@
 
 
 .input_container{
-    position: relative;
+    width: 100%;
     height: 7rem;
-    width: fit-content;
+    position: relative;
     margin: 0.5rem;
     overflow: hidden;
 }
@@ -88,9 +90,9 @@ input:checked + .radio_info label{
 /* Search Algorithms */
 .main_inputs_search_algorithms{
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
 }
 
 .btn_link{

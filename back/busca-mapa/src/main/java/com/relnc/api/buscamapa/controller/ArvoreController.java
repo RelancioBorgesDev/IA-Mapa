@@ -62,14 +62,13 @@ public class ArvoreController {
         }
 
 
-        return null;
+        return Collections.singletonList("Caminho não encontrado");
     }
 
     @GetMapping(path = "/profundidade/{continente}/{inicio}/{fim}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<String> profundidade(   @PathVariable("continente") String continente,
                                        @PathVariable("inicio") String inicio,
                                        @PathVariable("fim") String fim) {
-
         Lista l1 = new Lista(); // fila de nós para visitar
         Lista l2 = new Lista(); // árvore de busca (nós visitados)
         Map<String, Set<String>> grafo = arq.retornaPaises(continente); // grafo de conexões
@@ -91,7 +90,6 @@ public class ArvoreController {
             // verifica se encontrou o nó objetivo
             caminho.add((String) atual.getValor1());
             if (atual.getValor1().equals(fim)) {
-                System.out.println(caminho);
                 return caminho; // retorna a árvore de busca (caminho encontrado)
             }
 
@@ -108,7 +106,7 @@ public class ArvoreController {
             }
         }
 
-        return null;
+        return Collections.singletonList("Caminho não encontrado");
     }
 
     @GetMapping(path = "/profundidadelimitada/{continente}/{inicio}/{fim}/{limite}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -138,7 +136,6 @@ public class ArvoreController {
             caminho.add((String) atual.getValor1());
             // verifica se encontrou o nó objetivo
             if (atual.getValor1().equals(fim)) {
-                System.out.println(caminho);
                 return caminho; // retorna a árvore de busca (caminho encontrado)
             }
 
@@ -157,7 +154,7 @@ public class ArvoreController {
             }
         }
 
-        return null; // caminho não encontrado
+        return Collections.singletonList("Caminho não encontrado"); // caminho não encontrado
     }
 
     @GetMapping(path = "/aprofundamentoiterativo/{continente}/{inicio}/{fim}/{limiteMaximo}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -186,7 +183,6 @@ public class ArvoreController {
                 caminho.add((String) atual.getValor1());
                 // verifica se encontrou o nó objetivo
                 if (atual.getValor1().equals(fim)) {
-                    System.out.println(caminho);
                     return caminho; // retorna a árvore de busca (caminho encontrado)
                 }
 
@@ -208,7 +204,7 @@ public class ArvoreController {
             l1 = l1Temp; // atualiza a pilha de visitas para a próxima iteração
         }
 
-        return null; // caminho não encontrado
+        return Collections.singletonList("Caminho não encontrado"); // caminho não encontrado
     }
     @GetMapping(path = "/bidirecional/{continente}/{inicio}/{fim}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<String> bidirecional(@PathVariable("continente") String continente, @PathVariable("inicio") Object inicio, @PathVariable("fim") Object fim) {
@@ -296,9 +292,69 @@ public class ArvoreController {
             ni += 1;
         }
 
-        return null; // caminho não encontrado
+        return Collections.singletonList("Caminho não encontrado"); // caminho não encontrado
     }
+    @GetMapping("/custouniforme/{continente}/{inicio}/{fim}")
+    public List<String> custoUniforme(@PathVariable("continente") String continente,
+                                 @PathVariable("inicio") String inicio,
+                                 @PathVariable("fim") String fim) {
 
+        Map<String, Set<String>> mapaLocais = arq.retornaPaises(continente);
+        String coordenada = veirificaPaisRetornaCoordenadas(continente);
+        Map<String, NodeEstrela> coordenadas = arq.retornaCoordenadasCapitais(coordenada);
+        PriorityQueue<NodeEstrela> pq = new PriorityQueue<>(Comparator.comparingDouble(NodeEstrela::getCusto));
+
+        Map<String, NodeEstrela> visitados = new HashMap<>();
+        NodeEstrela noPartida = coordenadas.get(inicio);
+        noPartida.setCusto(0);
+        noPartida.setCustoAproximado(menorDistanciaEntreDoisPaises(inicio, fim, coordenada));
+        noPartida.setFn(calculoDoFn(noPartida.getCusto(),noPartida.getCustoAproximado()));
+        pq.add(noPartida);
+
+        List<String> caminho = new ArrayList<>();
+
+        while (!pq.isEmpty()) {
+            NodeEstrela atual = pq.poll();
+
+            if (visitados.containsKey(atual.getNome())) {
+                continue;
+            }
+
+            visitados.put(atual.getNome(), atual);
+
+            if (Objects.equals(atual.getNome(), fim)) {
+
+                NodeEstrela no = atual;
+                while (no != null) {
+                    caminho.add(no.getNome());
+                    no = no.getPai();
+                }
+                Collections.reverse(caminho);
+                return caminho;
+            }
+
+            Set<String> conexoes = mapaLocais.get(atual.getNome());
+            for (String conexao : conexoes) {
+                if (visitados.containsKey(conexao)) {
+                    continue;
+                }
+                if (!coordenadas.containsKey(conexao)) {
+                    continue;
+                }
+                NodeEstrela novoNo = coordenadas.get(conexao);
+                double custo = atual.getCusto() + Math.abs(calculoDoCusto(conexao, coordenada));
+                if (!visitados.containsKey(conexao) || custo < novoNo.getCusto()) {
+                    novoNo.setCusto((int) custo);
+                    novoNo.setCustoAproximado(menorDistanciaEntreDoisPaises(conexao, fim, coordenada));
+                    novoNo.setFn(calculoDoFn(novoNo.getCusto(), novoNo.getCustoAproximado()));
+                    novoNo.setPai(atual);
+                    pq.add(novoNo);
+                }
+            }
+        }
+
+        return Collections.singletonList("Caminho não encontrado");
+    }
     @GetMapping("/aestrela/{continente}/{inicio}/{fim}")
     public List<String> aEstrela(@PathVariable("continente") String continente,
                                @PathVariable("inicio") String inicio,
@@ -358,7 +414,7 @@ public class ArvoreController {
             }
         }
 
-        return null;
+        return Collections.singletonList("Caminho não encontrado");
     }
 
     @GetMapping("/greedy/{continente}/{inicio}/{fim}")
@@ -396,7 +452,7 @@ public class ArvoreController {
                     caminho.add(no.getNome());
                     no = no.getPai();
                 }
-                Collections.reverse(caminho);
+
                 return caminho;
             }
 
@@ -419,7 +475,71 @@ public class ArvoreController {
             }
         }
 
-        return null;
+        return Collections.singletonList("Caminho não encontrado");
     }
+    @GetMapping("/aia/{continente}/{inicio}/{fim}/{limite}")
+    public List<String> aia(@PathVariable("continente") String continente,
+                            @PathVariable("inicio") String inicio,
+                            @PathVariable("fim") String fim,
+                            @PathVariable("limite") int limite) {
 
+        Map<String, Set<String>> mapaLocais = arq.retornaPaises(continente);
+        String coordenada = veirificaPaisRetornaCoordenadas(continente);
+        Map<String, NodeEstrela> coordenadas = arq.retornaCoordenadasCapitais(coordenada);
+        PriorityQueue<NodeEstrela> pq = new PriorityQueue<>(Comparator.comparingDouble(NodeEstrela::getFn));
+
+        Map<String, NodeEstrela> visitados = new HashMap<>();
+        NodeEstrela noPartida = coordenadas.get(inicio);
+        noPartida.setCusto(0);
+        noPartida.setCustoAproximado(menorDistanciaEntreDoisPaises(inicio, fim, coordenada));
+        noPartida.setFn(calculoDoFn(noPartida.getCusto(), noPartida.getCustoAproximado()));
+        pq.add(noPartida);
+
+        List<String> caminho = new ArrayList<>();
+
+        while (!pq.isEmpty()) {
+            NodeEstrela atual = pq.poll();
+
+            if (visitados.containsKey(atual.getNome())) {
+                continue;
+            }
+
+            visitados.put(atual.getNome(), atual);
+
+            if (Objects.equals(atual.getNome(), fim)) {
+                NodeEstrela no = atual;
+                while (no != null) {
+                    caminho.add(no.getNome());
+                    no = no.getPai();
+                }
+                Collections.reverse(caminho);
+                return caminho;
+            }
+
+            Set<String> conexoes = mapaLocais.get(atual.getNome());
+            for (String conexao : conexoes) {
+                if (visitados.containsKey(conexao)) {
+                    continue;
+                }
+                if (!coordenadas.containsKey(conexao)) {
+                    continue;
+                }
+
+                NodeEstrela novoNo = coordenadas.get(conexao);
+
+                int v2 = atual.getCusto() + Math.abs(calculoDoCusto(conexao, coordenada));
+                int v1 = v2 + novoNo.getCustoAproximado();
+
+                if (v1 <= limite && (!visitados.containsKey(conexao) || v2 < novoNo.getCusto())) {
+                    novoNo.setCusto(v2);
+                    novoNo.setCustoAproximado(menorDistanciaEntreDoisPaises(conexao, fim, coordenada));
+                    novoNo.setFn(calculoDoFn(novoNo.getCusto(), novoNo.getCustoAproximado()));
+                    novoNo.setPai(atual);
+                    pq.add(novoNo);
+                }
+            }
+        }
+
+        return Collections.singletonList("Caminho não encontrado");
+    }
 }

@@ -13,8 +13,8 @@ interface IPaisesCoordenadas {
   lng: number;
 }
 interface IPaises {
-    nome: string;
-  }
+  nome: string;
+}
 
 interface IPaisesContext {
   paises: Array<IPaises>;
@@ -48,28 +48,25 @@ export function PaisesContextProvider({ children }: IPaisesContextProvider) {
           [pais]: coordenadas as IPaisesCoordenadas,
         })
       );
-  
-      console.log("Resposta paises Coordenadas:", respostaPaisesCoordenadas);
-  
+
       const novoPaisesCoordenadas = Object.assign({}, ...coordenadasArray);
       setPaisesCoordenadas(novoPaisesCoordenadas);
-  
+
       const respostaPaises = await apiPaises.get(
         `/pais/${continente.toLowerCase()}`
       );
 
-      console.log("Resposta paises :", respostaPaises);
-  
       setPaises(respostaPaises.data);
     } catch (error) {
       // Trate o erro da requisição
       console.error("Erro na requisição:", error);
     }
   }
-  
 
   useEffect(() => {
-    recebePaises();
+    if (continente) {
+      recebePaises();
+    }
   }, [continente]);
 
   return (
