@@ -1,0 +1,28 @@
+Projeto Maps (Parte 2)
+
+Foram adicionados os métodos (Greedy, A*, AIA* e Custo Uniforme) ao projeto.
+
+Front-end: TypeScript - React
+Back-end: Java - Spring
+
+Editores de Texto Utilizados: VSCode (Front-end) IntelliJ (Back-end)
+
+Para executar a aplicação:
+
+Front-end: Caminho: IA_MAPS/front/map
+
+    É necessário ter o Node.js instalado na máquina, preferencialmente a versão LTS.
+    Ao abrir o código, preferencialmente no VSCode, digite o comando "npm i" ou "npm install" no terminal para baixar todas as dependências do projeto.
+    Para executar o projeto e abrir o front-end no navegador, digite o comando "npm run dev".
+
+Back-end: Caminho: IA_MAPS/back/busca-mapa
+
+    É necessário ter o SDK Java 17 ou 19 instalado. Geralmente, a configuração é feita automaticamente.
+    Caso não esteja configurado, deve aparecer uma opção para instalar o SDK.
+    Ao abrir o código, preferencialmente no IntelliJ, as dependências serão instaladas automaticamente.
+    Para rodar o back-end, acesse o arquivo "BuscaMapaApplication" e execute a aplicação. Isso pode ser feito clicando no ícone de execução no topo (Run) ou clicando com o botão direito no editor e selecionando a opção "Run BuscaMapaApplication.main()".
+
+Para que o projeto funcione corretamente, ambos devem ser executados juntos.
+Quando o projeto estiver aberto, escolha um continente e um método, e clique em "Enviar".
+No mapa, selecione o ponto de partida e o destino.
+Caso seja um método iterativo, digite também o limite.

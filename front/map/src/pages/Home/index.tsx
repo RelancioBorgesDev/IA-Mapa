@@ -102,10 +102,6 @@ export default function Home() {
             Enviar
           </button>
         </Link>
-
-        {isCamposVazios && (
-        <p className={style.error_message}>Campos Vazios</p>
-        )}
       </form>
     </main>
   );

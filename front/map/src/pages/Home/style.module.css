@@ -113,6 +113,10 @@ input:checked + .radio_info label{
    cursor: pointer;
    background-color: #2f7de2;
 }
+.btn_enviar:disabled{
+    background-color: #1a73e862;
+    cursor: not-allowed;
+}
 
 @media (max-width: 675px) {
     .main_inputs_search_algorithms{
