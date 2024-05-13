@@ -1,28 +1,41 @@
-Projeto Maps (Parte 2)
+## Instruções de Execução do Projeto IA_MAPS
 
-Foram adicionados os métodos (Greedy, A*, AIA* e Custo Uniforme) ao projeto.
+### Pré-requisitos
 
-Front-end: TypeScript - React
-Back-end: Java - Spring
+#### Front-end
+- Node.js instalado na máquina (preferencialmente versão LTS)
+- Editor de código, como o VSCode
 
-Editores de Texto Utilizados: VSCode (Front-end) IntelliJ (Back-end)
+#### Back-end
+- SDK Java 17 ou 19 instalado na máquina
+- IDE, como o IntelliJ
 
-Para executar a aplicação:
+### Configuração
 
-Front-end: Caminho: IA_MAPS/front/map
+#### Front-end
+1. Abra o código-fonte no VSCode.
+2. No terminal, execute o comando:
+    - npm install
+Isso instalará todas as dependências do projeto.
 
-    É necessário ter o Node.js instalado na máquina, preferencialmente a versão LTS.
-    Ao abrir o código, preferencialmente no VSCode, digite o comando "npm i" ou "npm install" no terminal para baixar todas as dependências do projeto.
-    Para executar o projeto e abrir o front-end no navegador, digite o comando "npm run dev".
+#### Back-end
+1. Abra o código-fonte no IntelliJ.
+2. As dependências serão instaladas automaticamente.
 
-Back-end: Caminho: IA_MAPS/back/busca-mapa
+### Execução
 
-    É necessário ter o SDK Java 17 ou 19 instalado. Geralmente, a configuração é feita automaticamente.
-    Caso não esteja configurado, deve aparecer uma opção para instalar o SDK.
-    Ao abrir o código, preferencialmente no IntelliJ, as dependências serão instaladas automaticamente.
-    Para rodar o back-end, acesse o arquivo "BuscaMapaApplication" e execute a aplicação. Isso pode ser feito clicando no ícone de execução no topo (Run) ou clicando com o botão direito no editor e selecionando a opção "Run BuscaMapaApplication.main()".
+#### Front-end
+1. No terminal, execute o comando:
+    - npm run dev
+Isso iniciará o servidor de desenvolvimento e abrirá o front-end no navegador.
 
-Para que o projeto funcione corretamente, ambos devem ser executados juntos.
-Quando o projeto estiver aberto, escolha um continente e um método, e clique em "Enviar".
-No mapa, selecione o ponto de partida e o destino.
-Caso seja um método iterativo, digite também o limite.
+#### Back-end
+1. Acesse o arquivo "BuscaMapaApplication".
+2. Execute a aplicação clicando no ícone de execução no topo (Run) ou clicando com o botão direito no editor e selecionando a opção "Run BuscaMapaApplication.main()".
+
+## Funcionamento do Projeto
+
+- Certifique-se de que tanto o front-end quanto o back-end estão em execução simultaneamente para o funcionamento adequado.
+- Ao abrir o projeto, escolha um continente e um método, e clique em "Enviar".
+- No mapa, selecione o ponto de partida e o destino.
+- Se for um método iterativo, digite também o limite.
