@@ -14,7 +14,8 @@
 
 #### Front-end
 1. Abra o código-fonte no VSCode.
-2. No terminal, execute o comando: npm install
+2. No terminal, execute o comando: `npm install`
+
 Isso instalará todas as dependências do projeto.
 
 #### Back-end
@@ -24,7 +25,8 @@ Isso instalará todas as dependências do projeto.
 ### Execução
 
 #### Front-end
-1. No terminal, execute o comando: npm run dev
+1. No terminal, execute o comando:` npm run dev `
+ 
 Isso iniciará o servidor de desenvolvimento e abrirá o front-end no navegador.
 
 #### Back-end
