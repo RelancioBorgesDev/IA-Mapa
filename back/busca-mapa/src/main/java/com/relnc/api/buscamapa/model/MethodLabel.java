@@ -1,9 +1,9 @@
 package com.relnc.api.buscamapa.model;
 
-public class MetodoLabel {
+public class MethodLabel {
     private String label;
 
-    public MetodoLabel(String label) {
+    public MethodLabel(String label) {
         this.label = label;
     }
 

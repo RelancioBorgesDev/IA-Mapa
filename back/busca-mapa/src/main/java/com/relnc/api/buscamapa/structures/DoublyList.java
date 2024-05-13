@@ -1,14 +1,13 @@
 package com.relnc.api.buscamapa.structures;
 
-public class ListaDupla {
-    private NodeEstrela inicio;
-    private NodeEstrela fim;
+public class DoublyList {
+    private NodeStar inicio;
+    private NodeStar fim;
 
-
-    public ListaDupla() {
+    public DoublyList() {
     }
 
-    public void insereInicio(NodeEstrela novo) {
+    public void insereInicio(NodeStar novo) {
         if (novo == null) {
             System.err.println("Erro: não é possível inserir um nó nulo na lista.");
             return;
@@ -26,7 +25,7 @@ public class ListaDupla {
         }
     }
 
-    public void insereFim(NodeEstrela novo) {
+    public void insereFim(NodeStar novo) {
         if (this.inicio == null) {
             this.inicio = novo;
             this.fim = novo;
@@ -37,8 +36,8 @@ public class ListaDupla {
         }
     }
 
-    public NodeEstrela removeInicio(){
-        NodeEstrela noRemovido;
+    public NodeStar removeInicio(){
+        NodeStar noRemovido;
         if (this.inicio == null){
             return null;
         }
@@ -48,8 +47,8 @@ public class ListaDupla {
         return noRemovido;
     }
 
-    public NodeEstrela removeFinal(){
-        NodeEstrela noRemovido;
+    public NodeStar removeFinal(){
+        NodeStar noRemovido;
         if (this.fim == null){
             return null;
         }
@@ -65,25 +64,25 @@ public class ListaDupla {
     }
 
 
-    public NodeEstrela getInicio() {
+    public NodeStar getInicio() {
         return inicio;
     }
 
-    public void setInicio(NodeEstrela inicio) {
+    public void setInicio(NodeStar inicio) {
         this.inicio = inicio;
     }
 
-    public NodeEstrela getFim() {
+    public NodeStar getFim() {
         return fim;
     }
 
-    public void setFim(NodeEstrela fim) {
+    public void setFim(NodeStar fim) {
         this.fim = fim;
     }
 
     @Override
     public String toString() {
-        NodeEstrela noAtual = inicio;
+        NodeStar noAtual = inicio;
         StringBuilder sb = new StringBuilder();
         while (noAtual != null) {
             sb.append(noAtual.toString());

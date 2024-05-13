@@ -1,9 +1,9 @@
 package com.relnc.api.buscamapa.structures;
 
-public class NodeEstrela {
-    private NodeEstrela pai;
-    private NodeEstrela proximo;
-    private NodeEstrela anterior;
+public class NodeStar {
+    private NodeStar pai;
+    private NodeStar proximo;
+    private NodeStar anterior;
     private String nome;
     private int custo;
     private int custoAproximado;
@@ -11,9 +11,9 @@ public class NodeEstrela {
     private double lat;
     private double lng;
 
-    public NodeEstrela() {
+    public NodeStar() {
     }
-    public NodeEstrela(String nome, int custo, int custoAproximado,int fn, NodeEstrela pai) {
+    public NodeStar(String nome, int custo, int custoAproximado, int fn, NodeStar pai) {
         this.pai = pai;
         this.custo = custo;
         this.custoAproximado = custoAproximado;
@@ -22,7 +22,7 @@ public class NodeEstrela {
         this.proximo = null;
         this.anterior = null;
     }
-    public NodeEstrela(String nome, int custo, int custoAproximado, NodeEstrela pai) {
+    public NodeStar(String nome, int custo, int custoAproximado, NodeStar pai) {
         this.pai = pai;
         this.custo = custo;
         this.custoAproximado = custoAproximado;
@@ -31,34 +31,34 @@ public class NodeEstrela {
         this.anterior = null;
     }
 
-    public NodeEstrela(String nome, double lat, double lng, NodeEstrela pai) {
+    public NodeStar(String nome, double lat, double lng, NodeStar pai) {
         this.pai = pai;
         this.nome = nome;
         this.lat = lat;
         this.lng = lng;
     }
 
-    public NodeEstrela getPai() {
+    public NodeStar getPai() {
         return pai;
     }
 
-    public void setPai(NodeEstrela pai) {
+    public void setPai(NodeStar pai) {
         this.pai = pai;
     }
 
-    public NodeEstrela getProximo() {
+    public NodeStar getProximo() {
         return proximo;
     }
 
-    public void setProximo(NodeEstrela proximo) {
+    public void setProximo(NodeStar proximo) {
         this.proximo = proximo;
     }
 
-    public NodeEstrela getAnterior() {
+    public NodeStar getAnterior() {
         return anterior;
     }
 
-    public void setAnterior(NodeEstrela anterior) {
+    public void setAnterior(NodeStar anterior) {
         this.anterior = anterior;
     }
 

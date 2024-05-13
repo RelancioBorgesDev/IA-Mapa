@@ -1,10 +1,10 @@
 package com.relnc.api.buscamapa.model;
 
-public class PaisCoordenada   {
+public class CountriesCoordinates {
     private double lat;
     private double lng;
 
-    public PaisCoordenada(double lat, double lng) {
+    public CountriesCoordinates(double lat, double lng) {
         this.lat = lat;
         this.lng = lng;
     }

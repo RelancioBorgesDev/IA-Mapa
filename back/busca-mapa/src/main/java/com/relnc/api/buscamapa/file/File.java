@@ -1,23 +1,22 @@
 package com.relnc.api.buscamapa.file;
 
-import com.relnc.api.buscamapa.model.MetodoLabel;
-import com.relnc.api.buscamapa.normalizer.PaisNormalizer;
-import com.relnc.api.buscamapa.structures.NodeEstrela;
+import com.relnc.api.buscamapa.model.MethodLabel;
+import com.relnc.api.buscamapa.normalizer.CountriesNormalizer;
+import com.relnc.api.buscamapa.structures.NodeStar;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.*;
 
-public class Arquivo {
+public class File {
 
     public Map<String, Set<String>> retornaPaises(String fileName) {
         Map<String, Set<String>> mapa = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String linha;
-            PaisNormalizer pn = new PaisNormalizer();
+            CountriesNormalizer pn = new CountriesNormalizer();
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(" - ");
                 String key = partes[0].trim();
@@ -38,11 +37,11 @@ public class Arquivo {
         return mapa;
     }
 
-    public Map<String, NodeEstrela> retornaCoordenadasCapitais(String path) {
-        Map<String, NodeEstrela> mapa = new HashMap<>();
+    public Map<String, NodeStar> retornaCoordenadasCapitais(String path) {
+        Map<String, NodeStar> mapa = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String linha;
-            PaisNormalizer pn = new PaisNormalizer();
+            CountriesNormalizer pn = new CountriesNormalizer();
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(":");
                 String key = partes[0].trim();
@@ -50,7 +49,7 @@ public class Arquivo {
                 String[] valores = partes[1].split(",");
                 double lat = Double.parseDouble(valores[0]);
                 double lng = Double.parseDouble(valores[1]);
-                mapa.put(keyNormalized, new NodeEstrela(keyNormalized, lat, lng, null));
+                mapa.put(keyNormalized, new NodeStar(keyNormalized, lat, lng, null));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,13 +57,13 @@ public class Arquivo {
         return mapa;
     }
 
-    public List<MetodoLabel> retornaNomeDosMetodos(){
-        List<MetodoLabel> metodosNomes = new ArrayList<>();
+    public List<MethodLabel> retornaNomeDosMetodos(){
+        List<MethodLabel> metodosNomes = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("nome_dos_metodos"))) {
             String linha;
             while ((linha = br.readLine()) != null) {
                 String[] partes = linha.split(",");
-                Arrays.stream(partes).forEach((metodoNome) -> metodosNomes.add(new MetodoLabel(metodoNome)));
+                Arrays.stream(partes).forEach((metodoNome) -> metodosNomes.add(new MethodLabel(metodoNome)));
             }
         } catch (IOException e) {
             e.printStackTrace();

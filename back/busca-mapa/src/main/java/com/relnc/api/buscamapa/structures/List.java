@@ -2,13 +2,12 @@ package com.relnc.api.buscamapa.structures;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
-public class Lista {
+public class List {
     private Node inicio;
     private Node fim;
 
-    public Lista() {
+    public List() {
         this.inicio = null;
         this.fim = null;
     }
@@ -94,7 +93,7 @@ public class Lista {
     }
 
     public void exibeCaminho(Node fim) {
-        List<Object> caminho = new ArrayList<>();
+        java.util.List<Object> caminho = new ArrayList<>();
         Node atual = fim;
         while (atual != null) {
             caminho.add(atual.getValor1());

@@ -1,13 +1,13 @@
 package com.relnc.api.buscamapa.model;
 
-public class Pais {
+public class Countries {
     private String nome;
 
-    public Pais(String nome) {
+    public Countries(String nome) {
         this.nome = nome;
     }
 
-    public Pais() {}
+    public Countries() {}
 
     public String getNome() {
         return nome;

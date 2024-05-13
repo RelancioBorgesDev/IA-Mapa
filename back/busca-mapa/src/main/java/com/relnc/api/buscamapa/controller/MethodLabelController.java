@@ -1,7 +1,7 @@
 package com.relnc.api.buscamapa.controller;
 
-import com.relnc.api.buscamapa.file.Arquivo;
-import com.relnc.api.buscamapa.model.MetodoLabel;
+import com.relnc.api.buscamapa.file.File;
+import com.relnc.api.buscamapa.model.MethodLabel;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +12,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/metodos")
 @CrossOrigin(origins = "*")
-public class MetodoLabelController {
-    Arquivo arq = new Arquivo();
+public class MethodLabelController {
+    File arq = new File();
     @GetMapping("/listaMetodosNomes")
-    public List<MetodoLabel> listaMetodos(){
+    public List<MethodLabel> listaMetodos(){
         return arq.retornaNomeDosMetodos();
     }
 }
